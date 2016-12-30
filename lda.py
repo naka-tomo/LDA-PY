@@ -2,9 +2,7 @@
 import numpy
 import random
 import math
-import matplotlib
 import pylab
-import matplotlib.pyplot as plt
 
 # ハイパーパラメータ
 __alpha = 1.0
