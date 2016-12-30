@@ -59,14 +59,6 @@ def conv_to_word_list( data ):
 # 尤度計算
 def calc_liklihood( data, n_dz, n_zv, n_z, K, V  ):
     lik = 0
-    """
-    for d in range(len(data)):
-        for v in range(V):
-            Pw = 0.000001
-            for z in range(K):
-                Pw += (n_dz[d][z] + __alpha )/( numpy.sum(n_dz[d]) + K *__alpha ) * (n_zv[z][v] + __beta) / (n_z[z] + V *__beta)
-            lik += data[d][v] * math.log( Pw )
-    """
 
     # 上の処理を高速化
     P_vz = (n_zv.T + __beta) / (n_z + V *__beta)
@@ -78,6 +70,15 @@ def calc_liklihood( data, n_dz, n_zv, n_z, K, V  ):
 
     return lik
 
+def save_model( n_dz, n_zv, n_z ):
+    Pdz = n_dz + __alpha
+    Pdz = (Pdz.T / Pdz.sum(1)).T
+
+    Pzv = n_zv + __beta
+    Pzv = (Pzv.T / Pzv.sum(1)).T
+
+    numpy.savetxt( "Pdz.txt", Pdz, fmt=str("%f") )
+    numpy.savetxt( "Pzv.txt", Pzv, fmt=str("%f") )
 
 
 # ldaメイン
@@ -101,7 +102,7 @@ def lda( data , K ):
     n_dz, n_zv, n_z = calc_lda_param( docs_dn, topics_dn, K, V )
 
 
-    for it in range(100):
+    for it in range(20):
         # メインの処理
         for d in range(D):
             N = len(docs_dn[d]) # 文書dに含まれる単語数
@@ -143,9 +144,12 @@ def lda( data , K ):
         pylab.draw()
         pylab.pause(0.1)
 
+    save_model( n_dz, n_zv, n_z )
+    pylab.ioff()
+    pylab.show()
 
 def main():
-    data = numpy.loadtxt( "data_mult2.txt" , dtype=numpy.int32)
+    data = numpy.loadtxt( "hist.txt" , dtype=numpy.int32)*10
     lda( data , 3 )
 
 if __name__ == '__main__':
