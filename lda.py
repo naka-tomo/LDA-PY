@@ -125,18 +125,18 @@ def lda( data , K ):
 
         lik = calc_liklihood( data, n_dz, n_zv, n_z, K, V )
         liks.append( lik )
-        print "対数尤度：", lik
+        print( "対数尤度：", lik )
         doc_dopics = numpy.argmax( n_dz , 1 )
-        print "分類結果：", doc_dopics
-        print "---------------------"
+        print( "分類結果：", doc_dopics )
+        print( "---------------------" )
 
 
         # グラフ表示
         pylab.clf()
-        pylab.subplot("121")
+        pylab.subplot(121)
         pylab.title( "P(z|d)" )
         pylab.imshow( n_dz / numpy.tile(numpy.sum(n_dz,1).reshape(D,1),(1,K)) , interpolation="none" )
-        pylab.subplot("122")
+        pylab.subplot(122)
         pylab.title( "liklihood" )
         pylab.plot( range(len(liks)) , liks )
         pylab.draw()
